@@ -46,7 +46,7 @@ class ViewController: UIViewController, ModeSelectionDelegate {
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         
-        self.titleLabel = CustomLabel(title: "Instagrid", color: .white, textFont: Constants.thirstySoftRegular!)
+        self.titleLabel = CustomLabel(title: "Pixgrid", color: .white, textFont: Constants.thirstySoftRegular!)
         
         self.arrowImageView = UIImageView(image: UIImage(named: "arrow-up"))
         self.arrowImageView.translatesAutoresizingMaskIntoConstraints = false
