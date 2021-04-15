@@ -309,6 +309,7 @@
 		F6F3E40D24A514D40098EF3A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = 568UZNMWK9;
@@ -327,6 +328,7 @@
 		F6F3E40E24A514D40098EF3A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = 568UZNMWK9;
