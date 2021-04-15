@@ -50,7 +50,7 @@ class ViewController: UIViewController, ModeSelectionDelegate {
         
         self.arrowImageView = UIImageView(image: UIImage(named: "arrow-up"))
         self.arrowImageView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         self.swipeLabel = CustomLabel(title: "Swipe up to share", color: .white, textFont: Constants.delmMedium!)
         
         self.gridView = GrideView()
@@ -100,7 +100,7 @@ class ViewController: UIViewController, ModeSelectionDelegate {
         super.viewDidLoad()
         
         self.buttons[2].isSelected = true
-    
+        
         view.backgroundColor = UIColor(named: "light-blue")
         
         view.addSubview(titleLabel)
@@ -150,12 +150,11 @@ class ViewController: UIViewController, ModeSelectionDelegate {
         
         self.thirdModeButton.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
         self.thirdModeButton.heightAnchor.constraint(equalToConstant: buttonWidth).isActive = true
-        
     }
     
     @objc private func handleGesture() {
         swipeAnimation()
-        checkForSwipe()
+        checkSwipe()
     }
     
     @objc func didSelectMode(_ button: UIButton) {
@@ -169,114 +168,72 @@ class ViewController: UIViewController, ModeSelectionDelegate {
     // MARK: - Private Functions
     
     private func animationDone() {
-         UIView.animate(withDuration: 0.8,
-                        delay: 0,
-                        usingSpringWithDamping: 0.5,
-                        initialSpringVelocity: 0.5,
-                        options: [],
-                        animations: {
-                         self.gridView.transform = .identity
-         } , completion: nil )
-     }
-     
-     private func swipeAnimation() {
-         let swipePortrait = CGAffineTransform(translationX: 0, y: -self.view.frame.height * 0.3)
-             UIView.animate(withDuration: 0.4, animations: {
-                 self.gridView.transform = swipePortrait
-             }) { [self] (success) in
-                 if (success) {
-                     animationDone()
-             }
-         }
-     }
+        UIView.animate(withDuration: 0.8,
+                       delay: 0,
+                       usingSpringWithDamping: 0.5,
+                       initialSpringVelocity: 0.5,
+                       options: [],
+                       animations: {
+                        self.gridView.transform = .identity
+                       } , completion: nil )
+    }
+    
+    private func swipeAnimation() {
+        let swipePortrait = CGAffineTransform(translationX: 0, y: -self.view.frame.height * 0.3)
+        UIView.animate(withDuration: 0.4, animations: {
+            self.gridView.transform = swipePortrait
+        }) { [self] (success) in
+            if (success) {
+                animationDone()
+            }
+        }
+    }
     
     fileprivate func mergeImages() -> UIImage? {
+        let imageRenderer = UIGraphicsImageRenderer(size: CGSize(width: gridView.frame.size.width, height: gridView.frame.size.height))
         
-        let mode = gridView.mode
-        
-        let widthImage = gridView.frame.size.width
-        let heightImage = gridView.frame.size.height * 2
-        
-        let topLeftImage = gridView.buttons[0].image(for: .normal)
-        let topRightImage = gridView.buttons[1].image(for: .normal)
-        let bottomLeftImage = gridView.buttons[2].image(for: .normal)
-        let bottomRightImage = gridView.buttons[3].image(for: .normal)
-
-        
-        let width = widthImage / 2
-        let height = heightImage / 2
-        
-        let size = CGSize(width: widthImage, height: heightImage)
-        
-        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
-        
-        if mode == .mode1 {
-            topLeftImage!.draw(in: CGRect(x:0, y: 0, width: widthImage, height: height))
-            bottomLeftImage!.draw(in: CGRect(x: 0, y: height, width: width, height: height))
-            bottomRightImage!.draw(in: CGRect(x: width, y: height, width: width, height: height))
-        } else if mode == .mode2 {
-            topLeftImage!.draw(in: CGRect(x:0, y: 0, width: width, height: height))
-            topRightImage!.draw(in: CGRect(x: width, y: 0, width: width, height: height))
-            bottomLeftImage!.draw(in: CGRect(x: 0, y: height, width: widthImage, height: height))
-        } else if mode == .mode3 {
-            topLeftImage!.draw(in: CGRect(x:0, y: 0, width: width, height: height))
-            topRightImage!.draw(in: CGRect(x: width, y: 0, width: width, height: height))
-            bottomLeftImage!.draw(in: CGRect(x: 0, y: height, width: width, height: height))
-            bottomRightImage!.draw(in: CGRect(x: width, y: height, width: width, height: height))
+        return imageRenderer.image { (action) in
+            gridView.layer.render(in: action.cgContext)
         }
-        
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return newImage
     }
     
     fileprivate func presentUiActivityController(finalPhoto: UIImage) {
         let uiActivityController = UIActivityViewController(activityItems: [finalPhoto] as [Any], applicationActivities: nil)
         present(uiActivityController, animated: true)
     }
-
     
-    func checkForSwipe() {
-        let mode = gridView.mode
-        let firtButton = gridView.buttons[0]
-        let secondButton = gridView.buttons[1]
-        let thirdButton = gridView.buttons[2]
-        let fourthButton = gridView.buttons[3]
-
-        let alert = Alert()
+    func modeValidated(mode: SelectedMode?, buttons: [UIButton]) -> Bool? {
+        
         if mode == .mode1 {
-            if firtButton.image(for: .normal) != UIImage(named: "plus") &&
-                thirdButton.image(for: .normal) != UIImage(named: "plus") &&
-                fourthButton.image(for: .normal) != UIImage(named: "plus") {
-                print("OK")
-                guard let image = mergeImages() else { return }
-                presentUiActivityController(finalPhoto: image)
-            } else {
-                alert.missingImage(viewController: self)
+            guard buttons[0].image(for: .normal) != UIImage(named: "plus")
+                    && buttons[2].image(for: .normal) != UIImage(named: "plus")
+                    && buttons[3].image(for: .normal) != UIImage(named: "plus") else {
+                return false
             }
         }
         if mode == .mode2 {
-            if firtButton.image(for: .normal) != UIImage(named: "plus") &&
-                secondButton.image(for: .normal) != UIImage(named: "plus") &&
-                thirdButton.image(for: .normal) != UIImage(named: "plus") {
-                print("OK")
-                guard let image = mergeImages() else { return }
-                presentUiActivityController(finalPhoto: image)
-            } else {
-                alert.missingImage(viewController: self)
+            guard buttons[0].image(for: .normal) != UIImage(named: "plus")
+                    && buttons[1].image(for: .normal) != UIImage(named: "plus")
+                    && buttons[2].image(for: .normal) != UIImage(named: "plus") else {
+                return false
+            }
+        } else {
+            for i in buttons {
+                guard i.image(for: .normal) != UIImage(named: "plus") else {
+                    return false
+                }
             }
         }
-        if mode == .mode3 {
-            if firtButton.image(for: .normal) != UIImage(named: "plus") &&
-                secondButton.image(for: .normal) != UIImage(named: "plus") &&
-                thirdButton.image(for: .normal) != UIImage(named: "plus") &&
-                fourthButton.image(for: .normal) != UIImage(named: "plus") {
-                print("OK")
-                guard let image = mergeImages() else { return }
-                presentUiActivityController(finalPhoto: image)
-            } else {
-                alert.missingImage(viewController: self)
-            }
+        return true
+    }
+    
+    func checkSwipe() {
+        if modeValidated(mode: gridView.mode, buttons: gridView.buttons) == true {
+            guard let image = mergeImages() else { return }
+            presentUiActivityController(finalPhoto: image)
+        } else {
+            let alert = Alert()
+            alert.missingImage(viewController: self)
         }
     }
 }
@@ -284,7 +241,6 @@ class ViewController: UIViewController, ModeSelectionDelegate {
 extension ViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     // Add photo
-    
     internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         
         guard button != nil else { return }
@@ -307,7 +263,7 @@ extension ViewController: UINavigationControllerDelegate, UIImagePickerControlle
     
     func addPhoto(button: UIButton) {
         let alert = Alert()
-
+        
         self.button = button
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self

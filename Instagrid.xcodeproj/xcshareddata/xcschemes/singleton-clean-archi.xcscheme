@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F6F3E3F724A514D20098EF3A"
-               BuildableName = "singleton-clean-archi.app"
+               BuildableName = "Instagrid.app"
                BlueprintName = "singleton-clean-archi"
                ReferencedContainer = "container:Instagrid.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F6F3E3F724A514D20098EF3A"
-            BuildableName = "singleton-clean-archi.app"
+            BuildableName = "Instagrid.app"
             BlueprintName = "singleton-clean-archi"
             ReferencedContainer = "container:Instagrid.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F6F3E3F724A514D20098EF3A"
-            BuildableName = "singleton-clean-archi.app"
+            BuildableName = "Instagrid.app"
             BlueprintName = "singleton-clean-archi"
             ReferencedContainer = "container:Instagrid.xcodeproj">
          </BuildableReference>
