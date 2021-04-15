@@ -1,1 +1,1 @@
-# Instagrid
+# PixGrid
